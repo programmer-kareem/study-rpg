@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Study RPG</title>
+  
+  <!-- HTML -->
+  
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/style/main.css">
+</head>
+
+<body>
+  <!-- Project -->
+  <div id="app">
+    
+    <header>
+      <section class="main-card upper-nav-section">
+        
+        <div class="user-info-box">
+          
+          <div class="user-pfp-box">
+            <img class="user-pfp" src="/assets/img/user_pfp.png" alt="user" />
+          </div>
+          
+          <div class="user-details">
+            
+            <div class="user-name">
+              Ayatullah
+            </div>
+            
+            <div class="user-level">
+              Level 12
+            </div>
+            
+          </div>
+          
+        </div>
+        
+        <div class="card streak-info">
+          
+          <div class="streak-counter">
+            <span class="streak-progress-icon">
+              ♠
+            </span>
+            5
+          </div>
+          
+          <div class="streak-counter-text">
+            Day Streak
+          </div>
+          
+          
+        </div>
+        
+      </section>
+    </header>
+    
+    
+    
+    <main>
+      
+      <section class="card timer-section">
+        
+        <div class="focus-type-selector-box">
+          
+          <div class="focus-mode-option active">
+            Timer
+          </div>
+          
+          <div class="focus-mode-option">
+            Stopwatch
+          </div>
+          
+          <div class="focus-mode-option">
+            Pomodoro
+          </div>
+          
+        </div>
+        
+        
+        
+        <div class="timer-box">
+          
+          <div class="timer-background-circle circle">
+            
+            <div class="timer-front-circle circle">
+              
+              <div class="timer-info">
+                
+                <div class="timer">
+                  25:00
+                </div>
+                <div class="timer-divider"></div>
+                <div class="timer-label">
+                  <span class="focus-timer-label-icon"></span>
+                  focus time
+                </div>
+                
+              </div>
+              
+            </div>
+            
+          </div>
+          
+        </div>
+        
+        
+        
+        <div class="timer-control-panel">
+          
+          <button class="timer-control-btn circle">
+            O
+          </button>
+          
+          <button class="timer-control-btn timer-start-button">
+            <span class="timer-start-icon">
+              >
+            </span>
+            Start
+          </button>
+          
+          <button class="timer-control-btn circle">
+            []
+          </button>
+          
+        </div>
+        
+      </section>
+      
+      
+      
+      <section class="card subject-section">
+        
+        <div class="subject-section-header">
+          
+          <div class="subject-title">
+            Subjects
+          </div>
+          
+          <button class="subject-edit-btn button">
+            ✎ Edit
+          </button>
+          
+        </div>
+        
+        
+        
+        <div class="subject-box">
+          
+          <div class="subject-card">
+            <div class="subject-icon-box circle">
+              <span class="subject-icon">
+                ⚛
+              </span>
+            </div>
+            <div class="subject-text-detail">
+              <div class="subject-name-box">
+                Physics
+              </div>
+              <div class="subject-time-displayer">
+                2 hours 15min
+              </div>
+            </div>
+            
+            
+          </div>
+          <div class="subject-card">
+            <div class="subject-icon-box circle">
+              <span class="subject-icon">
+                ⌬
+              </span>
+            </div>
+            <div class="subject-text-detail">
+              <div class="subject-name-box">
+                Programming
+              </div>
+              <div class="subject-time-displayer">
+                2 hours 15min
+              </div>
+            </div>
+            
+            
+            
+          </div>
+          <div class="subject-card">
+            <div class="subject-icon-box circle">
+              <span class="subject-icon">
+                ∑
+              </span>
+            </div>
+            <div class="subject-text-detail">
+              <div class="subject-name-box">
+                Mathematics
+              </div>
+              <div class="subject-time-displayer">
+                2 hours 15min
+              </div>
+            </div>
+            
+            
+          </div>
+          <div class="subject-card">
+            <div class="subject-icon-box circle">
+              <span class="subject-icon">
+                ☰
+              </span>
+            </div>
+            <div class="subject-text-detail">
+              <div class="subject-name-box">
+                Others
+              </div>
+              <div class="subject-time-displayer">
+                2 hours 15min
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      
+      <!-- daily progress meter -->
+      <section class="main-card study-goal-section">
+        <div class="study-goal-header">
+          <div class="study-goal-header-text">
+            Today's study goal
+          </div>
+          <div class="study-goal">
+            ✎ 2:15 hours of 4 hours
+          </div>
+        </div>
+        <div class="study-goal-bar">
+          <div class="study-goal-progress">
+            
+          </div>
+        </div>
+        
+      </section>
+      
+      
+      <section class="user-xp-section main-card">
+        <div class="xp-info-box">
+          <div class="xp-info-header">
+            XP Progress
+          </div>
+          <div class="xp-info-footer">
+            <div class="user-level-box">
+              Level-12
+            </div>
+            <div class="xp-count-box">
+              850 of 1200 XP
+            </div>
+          </div>
+        </div>
+        <div class="user-xp-bar">
+          <div class="user-xp-progress">
+            
+          </div>
+        </div>
+        <!-- info panelll--->
+      </section>
+      <div class="main-card information-panel">
+        <div class="information-panel-box">
+          <div class="information-card">
+            <div class="info-icon-box">
+              <span class="info-icon">
+                O
+              </span>
+            </div>
+            <div class="info-count">
+              23.5
+            </div>
+            <div class="info-text">
+              Study hours
+            </div>
+          </div>
+          
+          
+          <div class="information-card">
+            <div class="info-icon-box">
+              <span class="info-icon">
+                Q
+              </span>
+            </div>
+            <div class="info-count">
+              48
+            </div>
+            <div class="info-text">
+              Sessions
+            </div>
+          </div>
+          <div class="information-card">
+            <div class="info-icon-box">
+              <span class="info-icon">
+                8
+              </span>
+            </div>
+            <div class="info-count">
+              Edit
+            </div>
+            <div class="info-text">
+              Settings
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="lower-nav-bar">
+        <div class="lower-nav-box">
+          <div class="navigation-card">
+            <span class="navigation-card-icon">
+              ∆
+            </span>
+            <div class="navigation-card-title">
+              Home
+            </div>
+          </div>
+          <div class="navigation-card">
+            <span class="navigation-card-icon">
+            |
+            </span>
+            <div class="navigation-card-title">
+              Stats
+              </div>
+          </div>
+          <div class="navigation-card">
+            <span class="navigation-card-icon">
+              √
+            </span>
+            <div class="navigation-card-title">
+              Achivements
+            </div>
+          </div>
+          <div class="navigation-card">
+            <span class="navigation-card-icon">
+              8
+            </span>
+            <div class="navigation-card-title">
+              Profile
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  </div>
+  <script src="/script/main.js"></script>
+</body>
+
+</html>
+<!-- HTML -->
