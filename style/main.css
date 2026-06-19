@@ -478,15 +478,17 @@ button {
 
 .timer-control-panel button {
   border: 0.1vh solid yellow;
-  padding: 12px 18px;
+  padding: 6px 8px;
   border-radius: 10vw;
   background-color: green;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2vw;
+  overflow: hidden;
+  font-size: 2.6vh;
+  
 }
-
 .timer-start-button {
   min-width: 120px;
 }
@@ -842,4 +844,8 @@ space-evenly
 border: 1px solid yellow;
 
 
+fire color
+#FF7100
+#CD2525
+#5D2A09
 ---------- */
