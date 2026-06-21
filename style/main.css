@@ -461,6 +461,7 @@ button {
   gap: 2vw;
   overflow: hidden;
   font-size: 2.6vh;
+  color: var(--text-main);
   
 }
 
@@ -668,7 +669,7 @@ button {
 }
 
 .info-icon {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .info-count {
