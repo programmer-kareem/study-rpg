@@ -575,7 +575,12 @@ button {
 .study-goal-header :last-child {
   color: var(--text-secondary);
 }
+.study-goal-box{
+  display: flex;
+justify-content: center;
 
+flex-direction: row;
+}
 .study-goal-bar {
   width: 80%;
   height: 2vh;
