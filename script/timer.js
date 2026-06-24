@@ -2,9 +2,34 @@ let focusTypeSelector = document.querySelectorAll(".focus-mode-option");
 let notificationPopup = document.querySelector(".notification-popup");
 let informationPopup = document.querySelector(".information-popup");
 let confirmationPopup = document.querySelector(".confirmation-popup");
-let timerDisplayer = document.querySelector(".timer");
-let timerStartButton = document.querySelector(".timer-start-button")
-let focusMode;
+let counterDisplayer = document.querySelector(".timer");
+let counterStartButton = document.querySelector(".timer-start-button");
+let counterResetButton = document.querySelector(".timer-reset-button");
+let counterPauseButton = document.querySelector(".timer-pause-button");
+let defaultTimer = {
+  hours: "00",
+  minutes: "30",
+  seconds: "00"
+}
+let defaultStopwatch = {
+  hours: "00",
+  minutes: "00",
+  seconds: "00"
+}
+let defaultPomodoro = {
+  hours: "00",
+  minutes: "25",
+  seconds: "00",
+  shortBreakInMin: "5",
+  longBreakInMin: "10",
+  longBreakRoundInterval: "3"
+}
+let currentFocusMode = "timer";
+let interval;
+let lastTimerDuration;
+let isCounterRunning = false;
+let endTime;
+let remainingTime;
 
 function toMilliseconds(hours, minutes) {
   return ((hours * 60) + minutes) * 60 * 1000;
@@ -45,13 +70,40 @@ function closeAllPopups() {
   })
 }
 
-function updateTimer(remainingTimeInfo, currentFocusType) {
+function updateTimer(timeInfo, currentFocusMode) {
+  switch (currentFocusMode) {
+      case "timer":
+        counterDisplayer.innerText = toHours(timeInfo);
+        break;
+      case "stopwatch":
+        counterDisplayer.innerText = toHours(timeInfo);
+        break;
+      case "pomodoro":
+        alert("p")
+        break;
+    }
   if (currentFocusType === "timer") {
-    timerDisplayer.innerText = toHours(remainingTimeInfo);
+    
   }
   if (currentFocusType === "stopwatch") {}
   
   if (currentFocusType === "pomodoro") {}
+  
+}
+
+function setFocusType(fT) {
+  switch (fT) {
+    case "timer":
+      counterDisplayer.innerText = `${defaultTimer.hours}:${defaultTimer.minutes}:${defaultTimer.seconds}`
+      break;
+    case "stopwatch":
+      counterDisplayer.innerText = `${defaultStopwatch.hours}:${defaultStopwatch.minutes}:${defaultStopwatch.seconds}`
+      break;
+    case "pomodoro":
+      counterDisplayer.innerText = `${defaultPomodoro.hours}:${defaultPomodoro.minutes}:${defaultPomodoro.seconds}`
+      break;
+      
+  }
   
 }
 
@@ -63,21 +115,19 @@ function setTimer() {
   //hours input
   let timerHoursInputHeader = document.createElement("div");
   timerHoursInputHeader.classList.add("popup-prompt-header");
-  timerHoursInputHeader.innerText = "Enter Studying Duration in hours:"
+  timerHoursInputHeader.innerText = "Hours:"
   let timerHoursInput = document.createElement("input");
   timerHoursInput.classList.add("popup-input");
-  timerHoursInput.placeholder = "01"
+  timerHoursInput.placeholder = "00"
   //mins input
   let timerMinutesInputHeader = document.createElement("div");
   timerMinutesInputHeader.classList.add("popup-prompt-header");
-  timerMinutesInputHeader.innerText = "Enter Studying Duration in minutes:"
+  timerMinutesInputHeader.innerText = "Minutes:"
   let timerMinutesInput = document.createElement("input");
   timerMinutesInput.classList.add("popup-input");
   timerMinutesInput.placeholder = "30";
   timerHoursInput.type = "number";
   timerMinutesInput.type = "number";
-  timerHoursInput.value = "number";
-  timerMinutesInput.value = "number";
   //appending childs to content box
   contentBox.appendChild(timerHoursInputHeader);
   contentBox.appendChild(timerHoursInput);
@@ -92,43 +142,152 @@ function setTimer() {
   displayInformationPopup(header, contentBox, buttonsText);
   let startButton = document.querySelectorAll(".information-popup-footer-buttons");
   startButton[1].onclick = () => {
-    let duration = toMilliseconds(Number(timerHoursInput.value), Number(timerMinutesInput.value));
-    
-    console.log(timerHoursInput.value);
-    console.log(timerMinutesInput.value);
-    startTimer(duration)
+    if (timerHoursInput.value === "" && timerMinutesInput.value === "") {
+      startTimer(toMilliseconds(Number(defaultTimer.hours)), Number(defaultTimer.minutes));
+    } else {
+      let duration = toMilliseconds(Number(timerHoursInput.value), Number(timerMinutesInput.value));
+      startTimer(duration);
+    }
   }
 }
 
 
 function startTimer(duration) {
+  lastTimerDuration = duration;
+  isCounterRunning = true;
   let startTime = Date.now();
-  let endTime = startTime + duration;
-  setInterval(() => {
+  endTime = startTime + duration;
+  interval = setInterval(() => {
     let timeLeft = endTime - Date.now();
-    updateTimer(timeLeft, "timer")
-  }, 1000)
-  closeAllPopups()
+    
+    updateTimer(timeLeft, "timer");
+  }, 100)
+  closeAllPopups();
+  showFocusActionButton();
 }
 
-function setStopwatch() {}
+function startStopwatch() {
+  let startTime = Date.now();
+  let elapsedTime;
+  interval = setInterval(() => {
+     elapsedTime = Date.now() - startTime;
+    updateTimer(elapsedTime, "stopwatch")
+  }, 100)
+  closeAllPopups();
+  showFocusActionButton();
+}
 
-function setPomodoro(sessionDuration, breakTime, rounds, longBreakDuration, longBreakRoundInterval) {
+function setPomodoro(sessionDuration, breakTime, rounds, longBreakDuration, longBreakRoundInterval) {}
+
+function pauseCounter() {
+  remainingTime = endTime - Date.now();
+  clearInterval(interval);
+  isCounterRunning = false;
+  let pauseIcon = document.querySelector(".timer-pause-icon");
+  pauseIcon.classList.remove("ph-stop");
+  pauseIcon.classList.add("ph-play");
+}
+
+function resumeCounter() {
+  // rsune counter
+  //duration = remaining time
+  endTime = Date.now() + remainingTime;
   
+  interval = setInterval(() => {
+    let timeLeft = endTime - Date.now()
+    updateTimer(timeLeft, currentFocusMode)
+  }, 100)
+  isCounterRunning = true;
+  let pauseIcon = document.querySelector(".timer-pause-icon");
+  pauseIcon.classList.remove("ph-play");
+  pauseIcon.classList.add("ph-stop");
 }
 
+function stopCounter() {
+  clearInterval(interval);
+  isCounterRunning = false;
+}
+
+//focus type
 focusTypeSelector.forEach((focusType) => {
   focusType.addEventListener("click", () => {
     focusTypeSelector.forEach((options) => {
       options.classList.remove("active");
     })
     focusType.classList.add("active");
-    let focusMode = focusType.dataset.focusType;
-    
+    currentFocusMode = focusType.dataset.focusType;
+    setFocusType(currentFocusMode)
   });
-  
 });
 
-timerDisplayer.onclick = () => {
-  setTimer();
+function resetCounter(f) {
+  // fun to reset time
+  switch (f) {
+    case "timer":
+      counterDisplayer.innerText = toHours(Number(lastTimerDuration));
+      console.log(lastTimerDuration);
+      break;
+    case "stopwatch":
+      
+      break;
+    case "pomodoro":
+      
+      break;
+  }
+}
+
+function hideFocusActionButton() {
+  // to hide primary action button
+  counterResetButton.classList.add("hidden");
+  counterPauseButton.classList.add("hidden");
+  counterStartButton.classList.remove("hidden");
+}
+
+function showFocusActionButton() {
+  // to show it
+  counterResetButton.classList.remove("hidden");
+  counterPauseButton.classList.remove("hidden");
+  counterStartButton.classList.add("hidden");
+  
+}
+counterDisplayer.onclick = () => {
+  switch (currentFocusMode) {
+    case "timer":
+      setTimer();
+      break;
+    case "stopwatch":
+      break;
+    case "pomodoro":
+      alert("p")
+      break;
+  }
+}
+counterStartButton.onclick = () => {
+  if (isCounterRunning === false) {
+    switch (currentFocusMode) {
+      case "timer":
+        startTimer(toMilliseconds(Number(defaultTimer.hours)), Number(defaultTimer.minutes));
+        break;
+      case "stopwatch":
+        startStopwatch();
+        break;
+      case "pomodoro":
+        alert("p")
+        break;
+    }
+  }
+}
+counterResetButton.onclick = () => {
+  pauseCounter();
+  resetCounter(currentFocusMode);
+  hideFocusActionButton()
+}
+counterPauseButton.onclick = () => {
+  if (isCounterRunning === false) {
+    resumeCounter()
+  } else {
+    pauseCounter();
+  }
+  
+  
 }

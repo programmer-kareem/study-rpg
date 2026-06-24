@@ -5,6 +5,7 @@ function loadApp() {
   loadSubjectsData();
   loadProgressBars();
   loadInfoPanel();
+  hideFocusActionButton();
 }
 
 

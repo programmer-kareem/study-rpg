@@ -88,6 +88,7 @@ main {
   z-index: 1000;
   display: none;
 }
+
 .popup-header {
   display: flex;
   justify-content: space-between;
@@ -119,36 +120,43 @@ main {
   flex-direction: column;
   gap: 2vh;
 }
-.popup-footer{
+
+.popup-footer {
   margin-top: 5vh;
   width: 100%;
   display: flex;
   justify-content: right;
 }
-.popup-footer-box{
+
+.popup-footer-box {
   width: 50%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   
 }
-.popup-footer-buttons{
+
+.popup-footer-buttons {
   height: 4vh;
   width: 16vw;
   background-color: var(--bg-card-secondary);
   color: var(--text-main);
   border-radius: 2px;
 }
-.popup-footer-buttons:first-child{
+
+.popup-footer-buttons:first-child {
   background-color: #A42525;
 }
-.popup-footer-buttons:last-child{
+
+.popup-footer-buttons:last-child {
   background-color: #38A425;
 }
- 
-.notification-popup, .confirmation-popup{
+
+.notification-popup,
+.confirmation-popup {
   display: none;
 }
+
 /*popup elements common*/
 .popup-input {
   width: 80%;
@@ -485,12 +493,17 @@ button {
   overflow: hidden;
   font-size: 2.6vh;
   color: var(--text-main);
-  
+  transition: all 0.25s ease-in-out;
 }
 
 .timer-start-button {
-  min-width: 120px;
+  min-width: 20vh;
 }
+
+.hidden {
+  display: none !important;
+}
+
 
 .subject-section-header {
   width: 100%;
@@ -598,12 +611,14 @@ button {
 .study-goal-header :last-child {
   color: var(--text-secondary);
 }
-.study-goal-box{
-  display: flex;
-justify-content: center;
 
-flex-direction: row;
+.study-goal-box {
+  display: flex;
+  justify-content: center;
+  
+  flex-direction: row;
 }
+
 .study-goal-bar {
   width: 80%;
   height: 2vh;
