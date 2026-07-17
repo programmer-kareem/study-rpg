@@ -6,6 +6,10 @@ let counterDisplayer = document.querySelector(".timer");
 let counterStartButton = document.querySelector(".timer-start-button");
 let counterResetButton = document.querySelector(".timer-reset-button");
 let counterPauseButton = document.querySelector(".timer-pause-button");
+let popupCloseButton = document.querySelectorAll(".popup-header-close-box");
+let popupCancelButton = document.querySelectorAll(".popup-cancel-button");
+let counterTitle = document.querySelector(".counter-title");
+
 let timer = {
   hours: "00",
   minutes: "30",
@@ -34,25 +38,25 @@ let pomodoro = {
   minutes: "25",
   seconds: "00",
   
-  sessionDuration: toMilliseconds(25),
-  shortBreak: toMilliseconds(5),
-  longBreak: toMilliseconds(10),
+  sessionDuration: toMilliseconds(0, 25),
+  shortBreak: toMilliseconds(0, 5),
+  longBreak: toMilliseconds(0, 10),
   
   longBreakRoundInterval: 3,
   
-  round: 1,
-  state: "idle",
+  round: 0,
+  state: "focus",
   
   startTime: 0,
   endTime: 0,
   remainingTime: 0,
-  timeLeft: 0
+  timeLeft: 0,
 }
 let currentFocusMode = "timer";
 let interval;
 let hasCounterStarted = false;
 let isCounterRunning = false;
-let currentDisplayedPopup = "none";
+let currentDisplayedPopup = null;
 
 function toMilliseconds(hours, minutes) {
   return ((hours * 60) + minutes) * 60 * 1000;
@@ -80,7 +84,7 @@ function displayInformationPopup(header, content, buttonText) {
     buttons[0].innerText = buttonText.btnLeft;
     buttons[1].innerText = buttonText.btnRight;
   }
-  currentDisplayedPopup = "informationPopup";
+  currentDisplayedPopup = informationPopup;
 }
 
 function displayNotificationPopup(header, content, buttonText) {
@@ -91,11 +95,11 @@ function displayNotificationPopup(header, content, buttonText) {
   informationContent.appendChild(content)
   let button = document.querySelector(".notification-popup-footer-buttons");
   button.innerText = buttonText.btn1;
-  currentDisplayedPopup = "informationPopup";
+  currentDisplayedPopup = notificationPopup;
 }
 
 function closePopup() {
-  currentDisplayedPopup.style.display = "none";
+  currentDisplayedPopup.style.display = null;
   currentDisplayedPopup = "";
 }
 
@@ -103,7 +107,7 @@ function closeAllPopups() {
   document.querySelectorAll(".popup").forEach((popup) => {
     popup.style.display = "none";
   })
-  currentDisplayedPopup = "";
+  currentDisplayedPopup = null;
 }
 
 function updateCounter(timeInfo) {
@@ -116,7 +120,7 @@ function updateCounter(timeInfo) {
       counterDisplayer.innerText = toHours(timeInfo);
       break;
     case "pomodoro":
-      alert("p")
+      counterDisplayer.innerText = toHours(timeInfo);
       break;
   }
 }
@@ -134,28 +138,6 @@ function setFocusType() {
       break;
       
   }
-}
-//check if counter ends
-function checkIfCounterEnds() {
-  switch (currentFocusMode) {
-    case "timer":
-      if (timer.timeLeft <= 0) {
-        handleCounterCompletion();
-        return;
-      }
-      else {
-        updateCounter(timer.timeLeft);
-      }
-      break;
-    case "stopwatch":
-      //no need
-      break;
-    case "pomodoro":
-      alert("p")
-      break;
-  }
-  
-  
 }
 //every ficus type will be handled by this
 function setCounter() {
@@ -215,44 +197,110 @@ function setCounter() {
       let header = "Set Pomodoro"
       let contentBox = document.createElement("div");
       contentBox.classList.add("popup-content-box");
-      //hours input
-      let timerHoursInputHeader = document.createElement("div");
-      timerHoursInputHeader.classList.add("popup-prompt-header");
-      timerHoursInputHeader.innerText = "Hours:"
-      let timerHoursInput = document.createElement("input");
-      timerHoursInput.classList.add("popup-input");
-      timerHoursInput.placeholder = "00"
-      //mins input
-      let timerMinutesInputHeader = document.createElement("div");
-      timerMinutesInputHeader.classList.add("popup-prompt-header");
-      timerMinutesInputHeader.innerText = "Minutes:"
-      let timerMinutesInput = document.createElement("input");
-      timerMinutesInput.classList.add("popup-input");
-      timerMinutesInput.placeholder = "30";
-      timerHoursInput.type = "number";
-      timerMinutesInput.type = "number";
+      
+      //focus hours input
+      let pomodoroFocusHoursInputHeader = document.createElement("div");
+      pomodoroFocusHoursInputHeader.classList.add("popup-prompt-header");
+      pomodoroFocusHoursInputHeader.innerText = "Focus Hours:"
+      
+      let pomodoroFocusHoursInput = document.createElement("input");
+      pomodoroFocusHoursInput.classList.add("popup-input");
+      pomodoroFocusHoursInput.placeholder = "00";
+      pomodoroFocusHoursInput.type = "number";
+      
+      //focus mins input
+      let pomodoroFocusMinutesInputHeader = document.createElement("div");
+      pomodoroFocusMinutesInputHeader.classList.add("popup-prompt-header");
+      pomodoroFocusMinutesInputHeader.innerText = "Focus Minutes:"
+      
+      let pomodoroFocusMinutesInput = document.createElement("input");
+      pomodoroFocusMinutesInput.classList.add("popup-input");
+      pomodoroFocusMinutesInput.placeholder = "25";
+      pomodoroFocusMinutesInput.type = "number";
+      
+      //short break input
+      let pomodoroShortBreakInputHeader = document.createElement("div");
+      pomodoroShortBreakInputHeader.classList.add("popup-prompt-header");
+      pomodoroShortBreakInputHeader.innerText = "Short Break Duration:"
+      
+      let pomodoroShortBreakInput = document.createElement("input");
+      pomodoroShortBreakInput.classList.add("popup-input");
+      pomodoroShortBreakInput.placeholder = "5";
+      pomodoroShortBreakInput.type = "number";
+      
+      //long break input
+      let pomodoroLongBreakInputHeader = document.createElement("div");
+      pomodoroLongBreakInputHeader.classList.add("popup-prompt-header");
+      pomodoroLongBreakInputHeader.innerText = "Long Break Duration:"
+      
+      let pomodoroLongBreakInput = document.createElement("input");
+      pomodoroLongBreakInput.classList.add("popup-input");
+      pomodoroLongBreakInput.placeholder = "10";
+      pomodoroLongBreakInput.type = "number";
+      
+      //long break round selector
+      let pomodoroLongBreakRoundHeader = document.createElement("div");
+      pomodoroLongBreakRoundHeader.classList.add("popup-prompt-header");
+      pomodoroLongBreakRoundHeader.innerText = "Long Break After:"
+      
+      let pomodoroLongBreakRoundSelector = document.createElement("select");
+      pomodoroLongBreakRoundSelector.classList.add("popup-selector");
+      
+      let longBreakRoundOptions = ["None", "2", "3", "4", "5"];
+      
+      longBreakRoundOptions.forEach((round) => {
+        let option = document.createElement("option");
+        option.value = round;
+        option.innerText = round === "None" ? "None" : `${round} Rounds`;
+        pomodoroLongBreakRoundSelector.appendChild(option);
+      });
+      
       //appending childs to content box
-      contentBox.appendChild(timerHoursInputHeader);
-      contentBox.appendChild(timerHoursInput);
-      contentBox.appendChild(timerMinutesInputHeader);
-      contentBox.appendChild(timerMinutesInput);
+      contentBox.appendChild(pomodoroFocusHoursInputHeader);
+      contentBox.appendChild(pomodoroFocusHoursInput);
+      contentBox.appendChild(pomodoroFocusMinutesInputHeader);
+      contentBox.appendChild(pomodoroFocusMinutesInput);
+      contentBox.appendChild(pomodoroShortBreakInputHeader);
+      contentBox.appendChild(pomodoroShortBreakInput);
+      contentBox.appendChild(pomodoroLongBreakInputHeader);
+      contentBox.appendChild(pomodoroLongBreakInput);
+      contentBox.appendChild(pomodoroLongBreakRoundHeader);
+      contentBox.appendChild(pomodoroLongBreakRoundSelector);
       
       //buttons text, cancel and start
       let buttonsText = {
         btnLeft: "Cancel",
         btnRight: "Start"
       }
+      
       displayInformationPopup(header, contentBox, buttonsText);
+      
       let startButton = document.querySelectorAll(".information-popup-footer-buttons");
+      
       startButton[1].onclick = () => {
-        if (timerHoursInput.value === "" && timerMinutesInput.value === "") {
-          timer.duration = toMilliseconds(Number(timer.hours), Number(timer.minutes));
-          startCounter();
-        } else {
-          timer.duration = toMilliseconds(Number(timerHoursInput.value), Number(timerMinutesInput.value));
-          startCounter();
-        }
+        pomodoro.sessionDuration = toMilliseconds(
+          Number(pomodoroFocusHoursInput.value || pomodoro.hours),
+          Number(pomodoroFocusMinutesInput.value || pomodoro.minutes)
+        );
+        
+        pomodoro.shortBreak = toMilliseconds(
+          0,
+          Number(pomodoroShortBreakInput.value || 5)
+        );
+        
+        pomodoro.longBreak = toMilliseconds(
+          0,
+          Number(pomodoroLongBreakInput.value || 10)
+        );
+        
+        pomodoro.longBreakRoundInterval =
+          pomodoroLongBreakRoundSelector.value === "None" ?
+          null :
+          Number(pomodoroLongBreakRoundSelector.value);
+        
+        startCounter();
       }
+      
       break;
     }
   }
@@ -268,8 +316,6 @@ function startCounter() {
         timer.timeLeft = timer.endTime - Date.now();
         checkIfCounterEnds();
       }, 100)
-      closeAllPopups();
-      showFocusActionButton();
       break;
     }
     case "stopwatch": {
@@ -278,20 +324,54 @@ function startCounter() {
         stopwatch.elapsedTime = Date.now() - stopwatch.startTime;
         updateCounter(stopwatch.elapsedTime)
       }, 100)
-      closeAllPopups();
-      showFocusActionButton();
       break;
     }
     case "pomodoro": {
-      pauseCounter();
+      //  timer.lastTimerDuration = timer.duration;
+      switch (pomodoro.state) {
+        case "focus": {
+          pomodoro.startTime = Date.now();
+          pomodoro.endTime = pomodoro.startTime + pomodoro.sessionDuration;
+          interval = setInterval(() => {
+            pomodoro.timeLeft = pomodoro.endTime - Date.now();
+            checkIfCounterEnds();
+          }, 100);
+                    counterTitle.innerText="Focus time";
+          pomodoro.state = "focus";
+          pomodoro.round++;
+          break;
+        }
+        case "shortBreak": {
+          pomodoro.startTime = Date.now();
+          pomodoro.endTime = pomodoro.startTime + pomodoro.shortBreak;
+          interval = setInterval(() => {
+            pomodoro.timeLeft = pomodoro.endTime - Date.now();
+            checkIfCounterEnds();
+          }, 100);
+          counterTitle.innerText="Short break"          
+          pomodoro.state = "focus";
+          break;
+        }
+        case "longBreak": {
+          pomodoro.startTime = Date.now();
+          pomodoro.endTime = pomodoro.startTime + pomodoro.longBreak;
+          interval = setInterval(() => {
+            pomodoro.timeLeft = pomodoro.endTime - Date.now();
+            checkIfCounterEnds();
+          }, 100);
+                    counterTitle.innerText="Long Break"
+          pomodoro.state = "focus";
+          break;
+        }
+      }
       break;
     }
   }
+  closeAllPopups();
+  showFocusActionButton();
   isCounterRunning = true;
   hasCounterStarted = true;
 }
-
-function setPomodoro(sessionDuration, breakTime, rounds, longBreakDuration, longBreakRoundInterval) {}
 
 function pauseCounter() {
   switch (currentFocusMode) {
@@ -318,8 +398,35 @@ function stopCounter() {
   isCounterRunning = false;
   hasCounterStarted = false;
 }
+//check if counter ends
+function checkIfCounterEnds() {
+  switch (currentFocusMode) {
+    case "timer":
+      if (timer.timeLeft <= 0) {
+        handleCounterCompletion();
+        return;
+      }
+      else {
+        updateCounter(timer.timeLeft);
+      }
+      break;
+    case "stopwatch":
+      //no need
+      break;
+    case "pomodoro":
+      if (pomodoro.timeLeft <= 0) {
+        handleCounterCompletion();
+        return;
+      }
+      else {
+        updateCounter(pomodoro.timeLeft);
+      }
+      break;
+  }
+}
 
 function handleCounterCompletion() {
+  stopCounter();
   switch (currentFocusMode) {
     case "timer": {
       let contentBox = document.createElement("div");
@@ -363,13 +470,32 @@ function handleCounterCompletion() {
       break;
     }
     case "pomodoro": {
-      // Tab to edit
-      
+      // pomodoro will be complicated as it has many states, it will run break time, long break, short break n all
+      switch (pomodoro.state) {
+        case "focus": {
+          if (pomodoro.round % pomodoro.longBreakRoundInterval === 0) {
+            pomodoro.state = "longBreak";
+          } else {
+            pomodoro.state = "shortBreak";
+          }
+          pomodoro.round++;
+          break;
+        }
+        case "longBreak": {
+          pomodoro.state = "focus";
+          break;
+        }
+        case "shortBreak": {
+          alert(pomodoro.state)
+          pomodoro.state = "focus";
+          break;
+        }
+      }
+      startCounter();
       break;
     }
-    default:
-      stopCounter();
   }
+  setFocusType();
 }
 
 function resumeCounter() {
@@ -413,7 +539,7 @@ function resetCounter() {
       counterDisplayer.innerText = `${stopwatch.hours}:${stopwatch.minutes}:${stopwatch.seconds}`
       break;
     case "pomodoro":
-      
+      counterDisplayer.innerText = toHours(pomodoro.sessionDuration);
       break;
   }
   stopCounter();
@@ -535,7 +661,7 @@ counterDisplayer.onclick = () => {
       //nothing.. bro is mature enough to understand on its own
       break;
     case "pomodoro":
-      alert("p")
+      setCounter();
       break;
   }
 }
@@ -554,6 +680,16 @@ counterPauseButton.onclick = () => {
     resumeCounter();
   }
 }
+popupCloseButton.forEach((closeBtn) => {
+  closeBtn.onclick = () => {
+    closePopup();
+  }
+});
+popupCancelButton.forEach((cancelBtn) => {
+  cancelBtn.onclick = () => {
+    closePopup();
+  }
+});
 //.addEventListener("click", closePopup);
 //.addEventListener("click", closePopup);
 /*

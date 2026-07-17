@@ -17,6 +17,10 @@ List of bugs to remove / solve
 - [ ] 13. Separate completion logic from reset logic
 - [ ] 14. Stopwatch completion popup should show elapsed time instead of timer duration
 - [ ] 15. pause icon not changing on first click
+- [ ] 16. the timer n pomodoro hours input shouldn't exceed much.
+- [ ] 17. Refactor focus action buttons to dynamically create buttons based on current focus mode, with configurable button count, text, icons, and actions.
+
+
 ---
 
 Upcoming Features
